@@ -1,6 +1,5 @@
 import logoImage from "../assets/icons/chatme.png";
 import chatting from "../assets/images/chatting.png";
-import typing from "../assets/gifs/typing.gif";
 
 export const loginPageData = {
   title: "ChatMe App",
@@ -12,5 +11,4 @@ export const loginPageData = {
 export const chatPageData = {
   logo: logoImage,
   title: "ChatMe App",
-  typing: typing,
 };
