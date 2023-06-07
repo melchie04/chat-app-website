@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "dev": "nodemon server"
+    "dev": "nodemon server",
+    "build": "npm install"
   },
   "author": "Melchor Bendanillo Callos",
   "license": "ISC",
