@@ -23,7 +23,7 @@ const ChatBox = () => {
     isMessagesLoading,
     setIsMessagesLoading,
   } = ChatState();
-  const { socket, isSocketConnected, socketSelectedChat } = SocketState();
+  const { socket, isSocketConnected } = SocketState();
   const { isOpen, setIsEditModalOpen, setIsViewModalOpen } = SideBarState();
   const [newMessage, setNewMessage] = useState("");
   const [typing, setTyping] = useState(false);
