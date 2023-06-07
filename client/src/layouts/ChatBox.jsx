@@ -166,7 +166,7 @@ const ChatBox = () => {
           </button>
         </header>
       ) : null}
-      {isMessagesLoading ? (
+      {selectedChat && isMessagesLoading ? (
         <div className="h-full flex justify-center items-center">
           <CircularLoader />
         </div>
