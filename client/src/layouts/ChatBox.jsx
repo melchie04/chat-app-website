@@ -34,7 +34,7 @@ const ChatBox = () => {
 
   const fetchMessages = async () => {
     setIsMessagesLoading(true);
-    if (user) {
+    if (user && selectedChat) {
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
