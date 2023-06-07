@@ -60,7 +60,7 @@ const CreateGroupModal = () => {
       },
     };
     const { data } = await axios.post(
-      `/api/chat/group`,
+      `https://chat-app-website.onrender.com/api/chat/group`,
       {
         name: groupChatName,
         users: JSON.stringify(selectedUsers.map((u) => u._id)),
