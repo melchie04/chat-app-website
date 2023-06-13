@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 import { UserState } from "../../context/UserProvider";
 import { ChatState } from "../../context/ChatProvider";
 import { SideBarState } from "../../context/SideBarProvider";
 import { chatActions } from "../../data/action";
 import CircularLoader from "../customs/CircularLoader";
+import { createChat } from "../../utils/axiosHelper";
 
 const SearchBox = () => {
   const { isOpen } = SideBarState();
@@ -34,13 +34,7 @@ const SearchBox = () => {
       setSearchValue("");
       setShowDropdown(false);
       setIsChatListLoading(true);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
+      const data = await createChat(user, userId);
       if (!chatList.find((c) => c._id === data._id)) {
         dispatch({
           type: chatActions.CREATE_CHAT,

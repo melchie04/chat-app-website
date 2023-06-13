@@ -48,6 +48,14 @@ export const reducer = (state, { type, payload }) => {
         ...state,
         notification: payload,
       };
+    case chatActions.CLEAR:
+      return {
+        ...state,
+        chatList: [],
+        selectedChat: null,
+        notification: [],
+        messages: [],
+      };
     default:
       break;
   }

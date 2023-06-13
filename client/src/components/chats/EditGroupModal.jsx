@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { IoClose } from "react-icons/io5";
 import { UserState } from "../../context/UserProvider";
 import { ChatState } from "../../context/ChatProvider";
@@ -14,6 +13,13 @@ import CustomModal from "../customs/CustomModal";
 import ModalInput from "../customs/ModalInput";
 import ModalButton from "../customs/ModalButton";
 import CircularLoader from "../customs/CircularLoader";
+import {
+  addToGroup,
+  getChatList,
+  getMessages,
+  removeFromGroup,
+  renameGroup,
+} from "../../utils/axiosHelper";
 
 const CreateGroupModal = () => {
   const { isEditModalOpen, setIsEditModalOpen } = SideBarState();
@@ -81,40 +87,26 @@ const CreateGroupModal = () => {
     const addedUsers = arr1.filter(
       (user1) => !arr2.some((user2) => user2._id === user1._id)
     );
-
-    if (removedUsers.length > 0) {
-      for (const user of removedUsers) {
-        newSelectedChat = await removeFromGroup(user);
-      }
-    }
-    if (addedUsers.length > 0) {
-      for (const user of addedUsers) {
-        newSelectedChat = await addToGroup(user);
-      }
-    }
-    if (groupChatName && groupChatName !== selectedChat.chatName) {
-      newSelectedChat = await renameGroup();
-    }
     if (user) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.get("/api/chat", config);
-      newChatList = data;
-    }
-    if (user) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
-        config
-      );
-      newMessages = data;
+      if (removedUsers.length > 0) {
+        for (const userToRemove of removedUsers) {
+          newSelectedChat = await removeFromGroup(
+            user,
+            selectedChat,
+            userToRemove
+          );
+        }
+      }
+      if (addedUsers.length > 0) {
+        for (const userToAdd of addedUsers) {
+          newSelectedChat = await addToGroup(user, selectedChat, userToAdd);
+        }
+      }
+      if (groupChatName && groupChatName !== selectedChat.chatName) {
+        newSelectedChat = await renameGroup(user, selectedChat, groupChatName);
+      }
+      newChatList = await getChatList(user);
+      newMessages = await getMessages(user, selectedChat);
     }
     dispatch({
       type: chatActions.UPDATE_GROUP_CHAT,
@@ -124,72 +116,11 @@ const CreateGroupModal = () => {
         selectedChat: newSelectedChat,
       },
     });
-
     clearInputs();
     setIsChatListLoading(false);
     setIsLoading(false);
     toastSuccess("Group chat has been updated!");
     setIsEditModalOpen(false);
-  };
-
-  const removeFromGroup = async (userToRemove) => {
-    if (user) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.put(
-        `/api/chat/groupremove`,
-        {
-          chatId: selectedChat._id,
-          userId: userToRemove._id,
-        },
-        config
-      );
-      return data;
-    }
-    return;
-  };
-
-  const addToGroup = async (userToAdd) => {
-    if (user) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.put(
-        `/api/chat/groupadd`,
-        {
-          chatId: selectedChat._id,
-          userId: userToAdd._id,
-        },
-        config
-      );
-      return data;
-    }
-    return;
-  };
-
-  const renameGroup = async () => {
-    if (user) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.put(
-        `/api/chat/grouprename`,
-        {
-          chatId: selectedChat._id,
-          chatName: groupChatName,
-        },
-        config
-      );
-      return data;
-    }
-    return;
   };
 
   const clearInputs = () => {

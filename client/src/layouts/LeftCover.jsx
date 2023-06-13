@@ -3,7 +3,7 @@ import { loginPageData } from "../data/content";
 
 const LeftCover = () => {
   return (
-    <div className="bg-orange-500 flex flex-col justify-center items-center text-center">
+    <div className="bg-orange-500 flex flex-col justify-center items-center text-center p-5">
       <img src={loginPageData.logo} alt="Logo" className="w-20 h-20 p-2" />
       <h1 className="text-white text-4xl font-bold p-2">
         {loginPageData.title}

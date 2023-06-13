@@ -29,8 +29,12 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    logoutUser();
+    dispatch({
+      type: chatActions.CLEAR,
+      payload: null,
+    });
     socket.off("setup");
+    logoutUser();
     navigate("/");
   };
 
@@ -118,14 +122,14 @@ const Header = () => {
           <img
             src={user?.pic}
             alt="Profile"
-            className="w-8 h-8 rounded-full cursor-pointer"
+            className="w-8 h-8 rounded-full cursor-pointer object-cover"
             onClick={toggleProfileDropdown}
           />
           {showProfileDropdown && (
             <div className="w-80 absolute right-0 mt-2 p-2 bg-white rounded-md shadow-md overflow-hidden z-50">
               <div className="flex items-center p-4">
                 <img
-                  className="w-8 h-8 rounded-full mr-2"
+                  className="w-8 h-8 rounded-full mr-2 object-cover"
                   src={user?.pic}
                   alt="Profile"
                 />

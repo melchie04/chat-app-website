@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { createUser, getUser, verifyUser } from "../utils/axiosHelper";
 
 const UserContext = createContext();
 
@@ -10,16 +10,7 @@ const UserProvider = ({ children }) => {
 
   const loginUser = async (email, password) => {
     try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.post(
-        "/api/user/login",
-        { email, password },
-        config
-      );
+      const data = await verifyUser(email, password);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setUser(data);
       return data;
@@ -31,21 +22,7 @@ const UserProvider = ({ children }) => {
 
   const registerUser = async (name, email, password, pic) => {
     try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.post(
-        "/api/user",
-        {
-          name,
-          email,
-          password,
-          pic,
-        },
-        config
-      );
+      const data = await createUser(name, email, password, pic);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setUser(data);
       return data;
@@ -62,13 +39,8 @@ const UserProvider = ({ children }) => {
 
   const searchUser = async (query) => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const response = await axios.get(`/api/user?search=${query}`, config);
-      return response.data;
+      const data = await getUser(user, query);
+      return data;
     } catch (error) {
       console.log(error);
       return;

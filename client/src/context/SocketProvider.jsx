@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
-import axios from "axios";
 import { ChatState } from "./ChatProvider";
 import { UserState } from "./UserProvider";
 import { chatActions } from "../data/action";
+import { getChatList } from "../utils/axiosHelper";
 
 const SocketContext = createContext();
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = import.meta.env.VITE_DEPLOYED_URL;
 var socket, socketSelectedChat;
 
 const SocketProvider = ({ children }) => {
@@ -52,12 +52,7 @@ const SocketProvider = ({ children }) => {
 
   const fetchChatList = async () => {
     if (user) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.get("/api/chat", config);
+      const data = await getChatList(user);
       dispatch({ type: chatActions.GET_CHATLIST, payload: data });
     }
   };

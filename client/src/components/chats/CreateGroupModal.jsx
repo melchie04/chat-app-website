@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { IoClose } from "react-icons/io5";
 import { UserState } from "../../context/UserProvider";
 import { ChatState } from "../../context/ChatProvider";
@@ -10,6 +9,7 @@ import CustomModal from "../customs/CustomModal";
 import ModalInput from "../customs/ModalInput";
 import ModalButton from "../customs/ModalButton";
 import CircularLoader from "../customs/CircularLoader";
+import { createGroup } from "../../utils/axiosHelper";
 
 const CreateGroupModal = () => {
   const { isCreateModalOpen, setIsCreateModalOpen } = SideBarState();
@@ -54,19 +54,7 @@ const CreateGroupModal = () => {
     }
     setIsLoading(true);
     setIsChatListLoading(true);
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
-    const { data } = await axios.post(
-      `/api/chat/group`,
-      {
-        name: groupChatName,
-        users: JSON.stringify(selectedUsers.map((u) => u._id)),
-      },
-      config
-    );
+    const data = await createGroup(user, groupChatName, selectedUsers);
     dispatch({
       type: chatActions.CREATE_GROUP_CHAT,
       payload: {

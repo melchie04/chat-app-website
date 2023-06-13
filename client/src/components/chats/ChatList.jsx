@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import axios from "axios";
 import { UserState } from "../../context/UserProvider";
 import { ChatState } from "../../context/ChatProvider";
 import { SideBarState } from "../../context/SideBarProvider";
@@ -7,6 +6,7 @@ import { chatActions } from "../../data/action";
 import { getSender } from "../../utils/chatHelper";
 import { createGroupImage } from "../../utils/imageHelper";
 import CircularLoader from "../customs/CircularLoader";
+import { getChatList } from "../../utils/axiosHelper";
 
 const ChatList = () => {
   const { user } = UserState();
@@ -22,12 +22,7 @@ const ChatList = () => {
   const fetchChatList = async () => {
     setIsChatListLoading(true);
     if (user) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.get("/api/chat", config);
+      const data = await getChatList(user);
       dispatch({ type: chatActions.GET_CHATLIST, payload: data });
     }
     setIsChatListLoading(false);
